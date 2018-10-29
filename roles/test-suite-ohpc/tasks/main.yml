@@ -59,6 +59,7 @@
     - name: Run the test suite with JUnit xml output in addition to regular logs
       shell: cd /home/ohpc-test/tests && make check
       environment:
+        BATS_ENABLE_TIMING: "1"
         BATS_JUNIT_FORMAT: "1"
       become: yes
       become_user: ohpc-test
