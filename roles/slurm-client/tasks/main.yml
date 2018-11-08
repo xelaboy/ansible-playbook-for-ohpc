@@ -110,7 +110,7 @@
 - name: Fetch /etc/munge/munge.key in sms to a ansible local /tmp
   fetch:
     src: /etc/munge/munge.key
-    dest: /tmp/munge.key
+    dest: "{{ role_path }}/munge.key"
     flat: yes
   when:
     - inventory_hostname in groups[nt_sms]
@@ -118,7 +118,7 @@
 
 - name: Copy /etc/munge/munge.key in sms to a compuing node
   copy:
-    src:  /tmp/munge.key
+    src:  "{{ role_path }}/munge.key"
     dest: /etc/munge/munge.key
     owner: munge
     group: munge
@@ -128,7 +128,9 @@
     - enable_warewulf == false
 
 - name: Remove /tmp/munge.key on ansible local
-  local_action: file path=/tmp/munge.key state=absent
+  delegate_to: localhost
+  become: no
+  file: path="{{ role_path }}/munge.key" state=absent
   when:
     - inventory_hostname in groups[nt_sms]
     - enable_warewulf == false

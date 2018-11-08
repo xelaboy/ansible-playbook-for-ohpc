@@ -74,10 +74,10 @@
     - inventory_hostname in groups[nt_cnodes]
     - enable_warewulf == false
 
-- name: Remove /tmp/resolv.conf on ansible local
-  local_action: file path=/tmp/resolv.conf state=absent
-  when:
-    - inventory_hostname in groups[nt_sms]
-    - enable_warewulf == false
+    #- name: Remove /tmp/resolv.conf on ansible local
+    #  local_action: file path=/tmp/resolv.conf state=absent
+    #  when:
+      #    - inventory_hostname in groups[nt_sms]
+      #    - enable_warewulf == false
 
 

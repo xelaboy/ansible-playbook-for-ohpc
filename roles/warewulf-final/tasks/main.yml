@@ -1,0 +1,362 @@
+---
+
+# This file is distributed under the Apache License (the
+# "License"); you may not use this file except in compliance
+# with the License.  See the LICENSE file distributed with 
+# this work for additional information regarding copyright
+# ownership. 
+# 
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+# This file is derived from recipe.sh in OpenHPC distribution 
+# and ported by Linaro Ltd. and Fujitsu Ltd.
+
+#
+#roles/warewulf/tasks/main.yml
+#
+
+# ----------------------------
+# Import files (Section 3.7.5)
+# ----------------------------
+#wwsh file import /etc/passwd
+- name: Execute wwsh file import /etc/passwd on master 
+  command: wwsh file import /etc/passwd
+  register: result
+  failed_when: result.rc not in [0]
+  when:
+    - inventory_hostname in groups[nt_sms]
+    - enable_warewulf == true
+
+#wwsh file import /etc/group
+- name: Execute wwsh file import /etc/group on master 
+  command: wwsh file import /etc/group
+  register: result
+  failed_when: result.rc not in [0]
+  when:
+    - inventory_hostname in groups[nt_sms]
+    - enable_warewulf == true
+
+#wwsh file import /etc/shadow 
+- name: Execute wwsh file import /etc/shadow on master 
+  command: wwsh file import /etc/shadow
+  register: result
+  failed_when: result.rc not in [0]
+  when:
+    - inventory_hostname in groups[nt_sms]
+    - enable_warewulf == true
+
+#wwsh file import /etc/slurm/slurm.conf
+- name: Execute wwsh file import /etc/slurm/slurm.conf on master 
+  command: wwsh file import /etc/slurm/slurm.conf
+  register: result
+  failed_when: result.rc not in [0]
+  when:
+    - inventory_hostname in groups[nt_sms]
+    - enable_warewulf == true
+
+#wwsh file import /etc/munge/munge.key
+- name: Execute wwsh file import /etc/munge/munge.key on master 
+  command: wwsh file import /etc/munge/munge.key
+  register: result
+  failed_when: result.rc not in [0]
+  when:
+    - inventory_hostname in groups[nt_sms]
+    - enable_warewulf == true
+
+#if [[ ${enable_ipoib} -eq 1 ]];then
+- block:
+
+#     wwsh file import /opt/ohpc/pub/examples/network/centos/ifcfg-ib0.ww
+  - name: Execute wwsh file import /opt/ohpc/pub/examples/network/centos/ifcfg-ib0.ww on master 
+    command: wwsh file import /opt/ohpc/pub/examples/network/centos/ifcfg-ib0.ww
+    register: result
+    failed_when: result.rc not in [0]
+    when:
+      - inventory_hostname in groups[nt_sms]
+      - enable_warewulf == true
+
+#     wwsh -y file set ifcfg-ib0.ww --path=/etc/sysconfig/network-scripts/ifcfg-ib0
+  - name: Execute wwsh -y file set ifcfg-ib0.ww --path=/etc/sysconfig/network-scripts/ifcfg-ib0 on master 
+    command: wwsh -y file set ifcfg-ib0.ww --path=/etc/sysconfig/network-scripts/ifcfg-ib0
+    register: result
+    failed_when: result.rc not in [0]
+    when:
+      - inventory_hostname in groups[nt_sms]
+      - enable_warewulf == true
+
+
+#     wwsh file import /opt/ohpc/pub/examples/network/centos/ifcfg-ib0.ww
+  - name: Fetch /opt/ohpc/pub/examples/network/centos/ifcfg-ib0.ww in sms to a ansible local /tmp
+    fetch:
+      src: /opt/ohpc/pub/examples/network/centos/ifcfg-ib0.ww
+      dest: /tmp/ifcfg-ib0.ww
+      flat: yes
+    when:
+      - inventory_hostname in groups[nt_sms]
+      - enable_warewulf == false
+
+  - name: Copy /opt/ohpc/pub/examples/network/centos/ifcfg-ib0.ww in sms to a computing node on master
+    copy: src=/tmp/ifcfg-ib0.ww dest=/opt/ohpc/pub/examples/network/centos/ifcfg-ib0.ww
+    when:
+      - inventory_hostname in groups[nt_cnodes]
+      - enable_warewulf == false
+
+  - name: Remove /tmp/ifcfg-ib0.ww on ansible local
+    local_action: file path=/tmp/ifcfg-ib0.ww state=absent
+    when:
+      - inventory_hostname in groups[nt_sms]
+      - enable_warewulf == false
+
+#     wwsh -y file set ifcfg-ib0.ww --path=/etc/sysconfig/network-scripts/ifcfg-ib0
+  - name: Copy /opt/ohpc/pub/examples/network/centos/ifcfg-ib0.ww /etc/sysconfig/network-scripts/ifcfg-ib0 on a computing node
+    command: cp /opt/ohpc/pub/examples/network/centos/ifcfg-ib0.ww /etc/sysconfig/network-scripts/ifcfg-ib0
+    register: result
+    failed_when: result.rc not in [0]
+    when:
+      - inventory_hostname in groups[nt_cnodes]
+      - enable_warewulf == false
+
+  when:
+    - enable_ipoib == true
+
+#fi
+
+# --------------------------------------
+# Assemble bootstrap image (Section 3.8)
+# --------------------------------------
+
+# export WW_CONF=/etc/warewulf/bootstrap.conf
+- block:
+
+  - name: Touch ~/.bashrc on master
+    file: path="{{ ansible_home }}/.bashrc" state=touch
+    when:
+      - enable_warewulf == true
+
+  - name: Add environment variable WW_CONF=/etc/warewulf/bootstrap.conf on master
+    lineinfile:
+      path: "{{ ansible_home }}/.bashrc"
+      state: present
+      backrefs: no
+      regexp: '^export WW_CONF=/etc/warewulf/bootstrap.conf$'
+      line: "export WW_CONF=/etc/warewulf/bootstrap.conf"
+
+  when:
+    - inventory_hostname in groups[nt_sms]
+    - enable_warewulf == true
+      
+# echo "drivers += updates/kernel/" >> $WW_CONF
+- name: Add drivers += updates/kernel/ to /etc/warewulf/bootstrap.conf on master
+  lineinfile:
+    path: /etc/warewulf/bootstrap.conf
+    state: present
+    backrefs: no
+    regexp: '^drivers \+= updates/kernel/$'
+    line: "drivers += updates/kernel/"
+  when:
+    - inventory_hostname in groups[nt_sms]
+    - enable_warewulf == true
+
+- name: Add drivers += overlay to /etc/warewulf/bootstrap.conf on master
+  lineinfile:
+    path: /etc/warewulf/bootstrap.conf
+    state: present
+    backrefs: no
+    regexp: '^drivers \+= overlay$'
+    line: "drivers += overlay"
+  when:
+    - inventory_hostname in groups[nt_sms]
+    - enable_warewulf == true
+
+# Add additional modules that should be loaded by modprobe
+- name: Add modprobe += "{{ additional_modules }}" to WW_CONF
+  lineinfile:
+    path: /etc/warewulf/bootstrap.conf
+    state: present
+    backrefs: no
+    regexp: '^modprobe \+= "{{ additional_modules }}"$'
+    line: "modprobe += {{ additional_modules }}"
+  when:
+    - inventory_hostname in groups[nt_sms]
+    - enable_warewulf == true
+    - additional_modules != ''
+
+# wwbootstrap `uname -r`
+- name: Execute wwbootstrap `uname -r` on master
+  shell: wwbootstrap `uname -r`
+  register: result
+  failed_when: result.rc not in [0]
+  when:
+    - inventory_hostname in groups[nt_sms]
+    - enable_warewulf == true
+    
+# # Assemble VNFS
+# wwvnfs --chroot $CHROOT
+- name: Execute wwvnfs --chroot "{{ compute_chroot_loc }}" on master
+  shell: wwvnfs --chroot "{{ compute_chroot_loc }}"
+  register: result
+  failed_when: result.rc not in [0]
+  when:
+    - inventory_hostname in groups[nt_sms]
+    - enable_warewulf == true
+
+# # Add hosts to cluster
+# echo "GATEWAYDEV=${eth_provision}" > /tmp/network.$$
+- name: Create temporary file for /etc/sysconfig/network on master
+  tempfile:
+    state: file
+  register: resfile
+  when:
+    - inventory_hostname in groups[nt_sms]
+    - enable_warewulf == true
+
+- name: "Set default gateway {{ internal_gateway }} on master"
+  lineinfile:
+    path: "{{ resfile.path }}"
+    state: present
+    backrefs: no
+    regexp: '^GATEWAYDEV={{ eth_provision }}$'
+    line: "GATEWAYDEV={{ eth_provision }}"
+  when:
+    - inventory_hostname in groups[nt_sms]
+    - enable_warewulf == true
+
+# wwsh -y file import /tmp/network.$$ --name network
+- name: "Execute wwsh -y file import {{ resfile.path }} --name network on master"
+  shell: wwsh -y file import "{{ resfile.path }}" --name network
+  register: result
+  failed_when: result.rc not in [0]
+  when:
+    - inventory_hostname in groups[nt_sms]
+    - enable_warewulf == true
+
+# wwsh -y file set network --path /etc/sysconfig/network --mode=0644 --uid=0
+- name: "Execute wwsh -y file set network --path /etc/sysconfig/network --mode=0644 --uid=0 on master"
+  shell: wwsh -y file set network --path /etc/sysconfig/network --mode=0644 --uid=0
+  register: result
+  failed_when: result.rc not in [0]
+  when:
+    - inventory_hostname in groups[nt_sms]
+    - enable_warewulf == true
+
+#Remove tempfile
+- name: "Remove the temporary file for network on master"
+  file:
+    state: absent
+    path: "{{ resfile.path }}"
+  when:
+    - inventory_hostname in groups[nt_sms]
+    - enable_warewulf == true
+
+- name: "Remove /etc/sysconfig/network on a computing node to create it newly on a computing node"
+  file:
+    state: absent
+    path: /etc/sysconfig/network
+  when:
+    - inventory_hostname in groups[nt_cnodes]
+    - enable_warewulf == false
+ 
+# for ((i=0; i<$num_computes; i++)) ; do
+#    wwsh -y node new ${c_name[i]} --ipaddr=${c_ip[i]} --hwaddr=${c_mac[i]} -D ${eth_provision}
+# done
+
+- name: Delete nodes from warewulf data store on master first for idempotence
+  shell: wwsh -d -v -y node delete "{{ item.c_name }}" --ipaddr="{{ item.c_ip }}" --hwaddr="{{ item.c_mac }}" -D "{{ eth_provision }}"
+  register: result
+  ignore_errors: yes
+  with_items: "{{ compute_nodes }}"
+  when:
+    - inventory_hostname in groups[nt_sms]
+    - enable_warewulf == true
+
+- name: Add nodes to warewulf data store on master
+  shell: wwsh -d -v -y node new "{{ item.c_name }}" --ipaddr="{{ item.c_ip }}" --hwaddr="{{ item.c_mac }}" -D "{{ eth_provision }}"
+  register: result
+  failed_when: result.rc not in [0]
+  with_items: "{{ compute_nodes }}"
+  when:
+    - inventory_hostname in groups[nt_sms]
+    - enable_warewulf == true
+
+# # Add hosts to cluster (Cont.)
+# wwsh -y provision set "${compute_regex}" --vnfs=centos7.3 --bootstrap=`uname -r` --files=dynamic_hosts,passwd,group,shadow,slurm.conf,munge.key,network
+- name: Add nodes to warewulf data store (Cont.) on master
+  shell: wwsh -d -v -y provision set "{{ compute_regex }}" --vnfs=centos7.3 --bootstrap=`uname -r` --files=dynamic_hosts,passwd,group,shadow,slurm.conf,munge.key,network
+  register: result
+  failed_when: result.rc not in [0]
+  when:
+    - inventory_hostname in groups[nt_sms]
+    - enable_warewulf == true
+
+# # Optionally, add arguments to bootstrap kernel
+# if [[ ${enable_kargs} ]]; then
+- block:
+
+#    wwsh provision set "${compute_regex}" --kargs=${kargs}
+  - name: Execute wwsh provision set "{{ compute_regex }}" --kargs="{{ kargs }}" on master 
+    command: "wwsh provision set {{ compute_regex }} --kargs={{ kargs }}"
+    register: result
+    failed_when: result.rc not in [0]
+
+  when:
+    - inventory_hostname in groups[nt_sms]
+    - enable_warewulf == true
+    - enable_kargs == true
+
+# fi
+
+# Restart ganglia services to pick up hostfile changes
+# if [[ ${enable_ganglia} -eq 1 ]];then
+- block:
+#   systemctl restart gmond
+  - name: Start gmond on master
+    service: name=gmond state=restarted
+
+#   systemctl restart gmetad
+  - name: Start gmetad on master
+    service: name=gmetad state=restarted
+
+  when:
+    - inventory_hostname in groups[nt_sms]
+    - enable_ganglia == true
+    # fi
+
+- name: Mount the nfs on the compute nodes
+  shell: mount -a
+  when:
+    - inventory_hostname in groups[nt_cnodes]
+    - enable_warewulf == false
+
+#systemctl restart dhcpd
+- name: Start dhcpd on master
+  service: name=dhcpd state=restarted
+  when:
+    ( inventory_hostname in groups[nt_sms] ) and
+    ( ( enable_warewulf == true ) or ( enable_dhcpd_server == true ) )
+
+#wwsh pxe update
+- name: Execute wwsh pxe update on master
+  shell: wwsh pxe update
+  register: result
+  failed_when: result.rc not in [0, 1]
+  when:
+    - inventory_hostname in groups[nt_sms]
+    - enable_warewulf == true
+
+# Optionally, enable console redirection 
+#if [[ ${enable_ipmisol} -eq 1 ]];then
+- block:
+#     wwsh -y provision set "${compute_regex}" --kargs "${kargs} console=ttyS1,115200"
+  - name: Execute wwsh -y provision set {{ compute_regex }} --kargs {{ kargs }} console=ttyS1,115200 on master
+    shell: "wwsh -y provision set {{ compute_regex }} --kargs {{ kargs }} console=ttyS1,115200"
+    register: result
+    failed_when: result.rc not in [0]
+    when:
+      - inventory_hostname in groups[nt_sms]
+      - enable_ipmisol == true
+      - enable_warewulf == true
