@@ -74,6 +74,9 @@ mellanox_iso_url: "http://content.mellanox.com/ofed/MLNX_OFED-4.3-2.0.2.0/MLNX_O
 # Mellanox OFED iso file
 mellanox_iso_file: "MLNX_OFED_LINUX-4.3-2.0.2.0-rhel7.4-x86_64.iso"
 
+# GNU Toolchain version to use:
+gnu_version: "8"
+
 # Flags for optional installation/configuration
 enable_beegfs_client: false
 enable_mpi_defaults: true
