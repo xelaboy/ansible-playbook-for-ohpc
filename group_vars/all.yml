@@ -68,6 +68,9 @@ eth_provision: "eth2"
 # ethernet interface on computing nodes( for non-warewulf environment )
 cnode_eth_internal: "eth2"
 
+# GNU Toolchain version to use:
+gnu_version: "8"
+
 # Flags for optional installation/configuration
 enable_beegfs_client: false
 enable_mpi_defaults: true
