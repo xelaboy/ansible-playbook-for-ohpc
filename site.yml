@@ -18,6 +18,7 @@
 
 - hosts: all
   user: root
+  any_errors_fatal: yes
   become: yes
      
   pre_tasks:
