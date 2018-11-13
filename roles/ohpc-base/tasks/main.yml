@@ -74,6 +74,13 @@
     - inventory_hostname in groups[nt_cnodes]
     - enable_warewulf == false
 
+- name: Configure PDSH SSH handling in bash.rc
+  lineinfile:
+    path: "{{ ansible_home }}/.bashrc"
+    regexp: '^export PDSH_SSH_ARGS_APPEND=.*$'
+    line: 'export PDSH_SSH_ARGS_APPEND="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /root/.ssh/cluster.pub"'
+    state: present
+
     #- name: Remove /tmp/resolv.conf on ansible local
     #  local_action: file path=/tmp/resolv.conf state=absent
     #  when:
