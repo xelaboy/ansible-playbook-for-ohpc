@@ -1,0 +1,6 @@
+DEVICE={{ sms_ipoib_internal }}
+TYPE=InfiniBand
+BOOTPROTO=dhcp
+ONBOOT=yes
+NM_CONTROLLED=no
+
