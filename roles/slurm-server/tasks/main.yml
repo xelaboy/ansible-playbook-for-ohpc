@@ -30,19 +30,3 @@
     - ohpc-slurm-server
   when:
     - inventory_hostname in groups[nt_sms]
-
-#perl -pi -e "s/ControlMachine=\S+/ControlMachine=${sms_name}/" /etc/slurm/slurm.conf
-- name: Identify resource manager hostname on master
-  replace: dest=/etc/slurm/slurm.conf regexp='ControlMachine=\S+' replace="ControlMachine={{ sms_name }}" backup=yes
-  when:
-    - inventory_hostname in groups[nt_sms]
-
-- block:
-  - name: slum configuration on master
-    replace: dest=/etc/slurm/slurm.conf regexp='^NodeName=(\S+).+State=(\S+)' replace="NodeName={{ compute_prefix }}[1-{{ num_computes }}] State=\2" backup=yes
-  - name: slum configuration on master
-    replace: dest=/etc/slurm/slurm.conf regexp='^PartitionName=normal Nodes=(\S+)' replace="PartitionName=normal Nodes={{ compute_prefix }}[1-{{ num_computes }}]" backup=yes
-  when:
-    - inventory_hostname in groups[nt_sms]
-
-
