@@ -70,11 +70,11 @@ cnode_eth_internal: "eth2"
 
 # Release Mellanox OFED iso
 #mellanox_iso_url: "http://content.mellanox.com/ofed/MLNX_OFED-4.3-2.0.2.0/MLNX_OFED_LINUX-4.3-2.0.2.0-rhel7.4-x86_64.iso"
-mellanox_iso_url: "http://www.mellanox.com/page/mlnx_ofed_eula?mtag=linux_sw_drivers&mrequest=downloads&mtype=ofed&mver=MLNX_OFED-4.4-2.0.7.0&mname=MLNX_OFED_LINUX-4.4-2.0.7.0-rhel7.5alternate-aarch64.iso"
+mellanox_iso_url: "http://content.mellanox.com/ofed/MLNX_OFED-4.5-1.0.1.0/MLNX_OFED_LINUX-4.5-1.0.1.0-rhel7.5alternate-aarch64.tgz"
 
 # Mellanox OFED iso file
 #mellanox_iso_file: "MLNX_OFED_LINUX-4.3-2.0.2.0-rhel7.4-x86_64.iso"
-mellanox_iso_file: "MLNX_OFED_LINUX-4.4-2.0.7.0-rhel7.5alternate-aarch64.iso"
+mellanox_iso_file: "MLNX_OFED_LINUX-4.5-1.0.1.0-rhel7.5alternate-aarch64.iso"
 
 # GNU Toolchain version to use:
 gnu_version: "8"
@@ -85,10 +85,10 @@ enable_mpi_defaults: true
 enable_mpi_opa: false
 enable_clustershell: true
 enable_ipmisol: false
-enable_opensm: false
-enable_mellanox_ib: true
-enable_linux_ib: false
-enable_ipoib: false
+enable_opensm: true
+enable_mellanox_ib: false
+enable_linux_ib: true
+enable_ipoib: true
 enable_ganglia: true
 enable_genders: true
 enable_kargs: false
@@ -98,7 +98,7 @@ enable_nagios: true
 enable_powerman: false
 enable_intel_packages: false
 enable_dhcpd_server: false
-enable_ifup: false
+enable_ifup: true
 enable_warewulf: true
 enable_nfs_ohpc: false
 enable_nfs_home: true
@@ -129,10 +129,15 @@ compute_nodes:
 
 # Optional settings
 #
+sms_ipoib_internal: 'ib0'
+sms_ipoib: "192.168.100.20"
+ipoib_netmask: "255.255.255.0"
 # IPoIB addresses for computes
+cnodes_ipoib_internal: 'ib0'
 compute_ipoib:
-- { num: 1, c_ipoib: "192.168.55.21", c_cid: "ff:00:00:00:00:00:02:00:00:02:c9:00:50:80:02:00:00:55:00:01"}
-- { num: 2, c_ipoib: "192.168.55.22", c_cid: "ff:00:00:00:00:00:02:00:00:02:c9:00:50:80:02:00:00:55:00:02"}
+- { num: 1, c_hostname: "10.40.24.121", c_ipoib: "192.168.100.121", c_cid: "ff:00:00:00:00:00:02:00:00:02:c9:00:50:80:02:00:00:55:00:01"}
+- { num: 2, c_hostname: "10.40.24.122", c_ipoib: "192.168.100.122", c_cid: "ff:00:00:00:00:00:02:00:00:02:c9:00:50:80:02:00:00:55:00:02"}
+- { num: 3, c_hostname: "10.40.24.123", c_ipoib: "192.168.100.123", c_cid: "ff:00:00:00:00:00:02:00:00:02:c9:00:50:80:02:00:00:55:00:03"}
 
 # BeeGFS repository URL
 beegfs_repo: "https://www.beegfs.io/release/beegfs_6/dists/beegfs-rhel7.repo"
