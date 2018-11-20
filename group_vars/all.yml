@@ -83,10 +83,10 @@ enable_mpi_defaults: true
 enable_mpi_opa: false
 enable_clustershell: true
 enable_ipmisol: false
-enable_opensm: false
-enable_mellanox_ib: true
-enable_linux_ib: false
-enable_ipoib: false
+enable_opensm: true
+enable_mellanox_ib: false
+enable_linux_ib: true
+enable_ipoib: true
 enable_ganglia: true
 enable_genders: true
 enable_kargs: false
@@ -96,7 +96,7 @@ enable_nagios: true
 enable_powerman: false
 enable_intel_packages: false
 enable_dhcpd_server: false
-enable_ifup: false
+enable_ifup: true
 enable_ethconf: false
 enable_warewulf: true
 enable_nfs_ohpc: false
@@ -128,11 +128,15 @@ compute_nodes:
 
 # Optional settings
 #
+sms_ipoib_internal: 'ib0'
+sms_ipoib: "192.168.100.20"
+ipoib_netmask: "255.255.255.0"
 # IPoIB addresses for computes
 cnodes_ipoib_internal: 'ib0'
 compute_ipoib:
-- { num: 1, c_ipoib: "192.168.55.21", c_cid: "ff:00:00:00:00:00:02:00:00:02:c9:00:50:80:02:00:00:55:00:01"}
-- { num: 2, c_ipoib: "192.168.55.22", c_cid: "ff:00:00:00:00:00:02:00:00:02:c9:00:50:80:02:00:00:55:00:02"}
+  - { num: 1, c_hostname: "10.40.24.21", c_ipoib: "192.168.100.21", c_cid: "ff:00:00:00:00:00:02:00:00:02:c9:00:50:80:02:00:00:55:00:01"}
+  - { num: 2, c_hostname: "10.40.24.22", c_ipoib: "192.168.100.22", c_cid: "ff:00:00:00:00:00:02:00:00:02:c9:00:50:80:02:00:00:55:00:02"}
+  - { num: 3, c_hostname: "10.40.24.23", c_ipoib: "192.168.100.22", c_cid: "ff:00:00:00:00:00:02:00:00:02:c9:00:50:80:02:00:00:55:00:02"}
 
 # BeeGFS repository URL
 beegfs_repo: "https://www.beegfs.io/release/beegfs_6/dists/beegfs-rhel7.repo"
