@@ -129,15 +129,15 @@ compute_nodes:
 
 # Optional settings
 #
-sms_ipoib_internal: 'ib0'
-sms_ipoib: "192.168.100.20"
+sms_ipoib_internal: 'ib1'
+sms_ipoib: "192.168.100.5"
 ipoib_netmask: "255.255.255.0"
 # IPoIB addresses for computes
-cnodes_ipoib_internal: 'ib0'
+cnodes_ipoib_internal: 'ib1'
 compute_ipoib:
-- { num: 1, c_ipoib: "192.168.100.21", c_cid: "ff:00:00:00:00:00:02:00:00:02:c9:00:50:80:02:00:00:55:00:01"}
-- { num: 2, c_ipoib: "192.168.100.22", c_cid: "ff:00:00:00:00:00:02:00:00:02:c9:00:50:80:02:00:00:55:00:02"}
-- { num: 3, c_ipoib: "192.168.100.22", c_cid: "ff:00:00:00:00:00:02:00:00:02:c9:00:50:80:02:00:00:55:00:02"}
+  - { num: 1, c_hostname: "10.40.24.3", c_ipoib: "192.168.100.3", c_cid: "ff:00:00:00:00:00:02:00:00:02:c9:00:50:80:02:00:00:55:00:01"}
+  - { num: 2, c_hostname: "10.40.24.4", c_ipoib: "192.168.100.4", c_cid: "ff:00:00:00:00:00:02:00:00:02:c9:00:50:80:02:00:00:55:00:02"}
+  - { num: 3, c_hostname: "10.40.24.1", c_ipoib: "192.168.100.1", c_cid: "ff:00:00:00:00:00:02:00:00:02:c9:00:50:80:02:00:00:55:00:02"}
 
 # BeeGFS repository URL
 beegfs_repo: "https://www.beegfs.io/release/beegfs_6/dists/beegfs-rhel7.repo"

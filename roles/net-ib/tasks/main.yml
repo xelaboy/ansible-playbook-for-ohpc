@@ -29,7 +29,7 @@
   - name: Install InfiniBand support on master
     yum: name={{ item }} state=latest
     with_items:
-      - "@InfiniBand Support"
+      - "@Infiniband Support"
     when:
       - inventory_hostname in groups[nt_sms]
 
