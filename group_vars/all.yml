@@ -130,6 +130,7 @@ compute_nodes:
 # Optional settings
 #
 # IPoIB addresses for computes
+cnodes_ipoib_internal: 'ib0'
 compute_ipoib:
 - { num: 1, c_ipoib: "192.168.55.21", c_cid: "ff:00:00:00:00:00:02:00:00:02:c9:00:50:80:02:00:00:55:00:01"}
 - { num: 2, c_ipoib: "192.168.55.22", c_cid: "ff:00:00:00:00:00:02:00:00:02:c9:00:50:80:02:00:00:55:00:02"}
