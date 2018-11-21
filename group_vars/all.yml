@@ -94,6 +94,7 @@ enable_powerman: false
 enable_intel_packages: false
 enable_dhcpd_server: false
 enable_ifup: false
+enable_ethconf: false
 enable_warewulf: true
 enable_nfs_ohpc: false
 enable_nfs_home: true

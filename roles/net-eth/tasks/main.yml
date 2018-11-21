@@ -48,6 +48,7 @@
   when:
     - inventory_hostname in groups[ nt_sms ]
     - enable_ifup == true
+    - enable_ethconf == true
 
 #
 # Create and make ethernet device on the computing node up
@@ -70,4 +71,5 @@
   when:
     - inventory_hostname in groups[ nt_cnodes ]
     - enable_ifup == true
+    - enable_ethconf == true
 
