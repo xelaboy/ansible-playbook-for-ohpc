@@ -325,6 +325,8 @@
       command: "ifup {{ cnodes_ipoib_internal }}"
       register: result
       failed_when: result.rc not in [0]
+      when:
+        - inventory_hostname != "10.40.24.21"
 
     when:
       - enable_dhcpd_server == false
