@@ -159,7 +159,7 @@
       dest: "/etc/sysconfig/network-scripts/ifcfg-{{ cnodes_ipoib_internal }}" 
 
   - name: Make {{ cnodes_ipoib_internal }} up on master
-    command: "ifup {{ conodes_ipoib_internal }}" 
+    command: "ifup {{ cnodes_ipoib_internal }}" 
     register: result
     failed_when: result.rc not in [0]
 
