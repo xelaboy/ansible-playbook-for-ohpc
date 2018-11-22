@@ -69,10 +69,10 @@ eth_provision: "eth2"
 cnode_eth_internal: "eth2"
 
 # Release Mellanox OFED iso
-mellanox_iso_url: "http://content.mellanox.com/ofed/MLNX_OFED-4.3-2.0.2.0/MLNX_OFED_LINUX-4.3-2.0.2.0-rhel7.4-x86_64.iso"
+mellanox_iso_url: "http://www.mellanox.com/page/mlnx_ofed_eula?mtag=linux_sw_drivers&mrequest=downloads&mtype=ofed&mver=MLNX_OFED-4.4-2.0.7.0&mname=MLNX_OFED_LINUX-4.4-2.0.7.0-rhel7.5alternate-aarch64.iso"
 
 # Mellanox OFED iso file
-mellanox_iso_file: "MLNX_OFED_LINUX-4.3-2.0.2.0-rhel7.4-x86_64.iso"
+mellanox_iso_file: "MLNX_OFED_LINUX-4.4-2.0.7.0-rhel7.5alternate-aarch64.iso"
 
 # GNU Toolchain version to use:
 gnu_version: "8"
