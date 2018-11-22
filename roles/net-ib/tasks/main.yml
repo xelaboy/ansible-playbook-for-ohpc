@@ -166,7 +166,7 @@
 
 #     systemctl enable opensm
   - name: Enable opensm on master
-    service: name=opensm enabled=yes
+    service: name=opensmd enabled=yes
 
 #     systemctl start opensm
   - name: Start opensm on master
