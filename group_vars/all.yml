@@ -69,7 +69,7 @@ eth_provision: "eth2"
 cnode_eth_internal: "eth2"
 
 # Release Mellanox OFED iso
-mellanox_iso_url: "http://www.mellanox.com/page/mlnx_ofed_eula?mtag=linux_sw_drivers&mrequest=downloads&mtype=ofed&mver=MLNX_OFED-4.4-2.0.7.0&mname=MLNX_OFED_LINUX-4.4-2.0.7.0-rhel7.5alternate-aarch64.iso"
+mellanox_iso_url: "http://content.mellanox.com/ofed/MLNX_OFED-4.4-2.0.7.0/MLNX_OFED_LINUX-4.4-2.0.7.0-rhel7.5alternate-aarch64.iso"
 
 # Mellanox OFED iso file
 mellanox_iso_file: "MLNX_OFED_LINUX-4.4-2.0.7.0-rhel7.5alternate-aarch64.iso"
@@ -84,8 +84,8 @@ enable_mpi_opa: false
 enable_clustershell: true
 enable_ipmisol: false
 enable_opensm: true
-enable_mellanox_ib: false
-enable_linux_ib: true
+enable_mellanox_ib: true
+enable_linux_ib: false
 enable_ipoib: true
 enable_ganglia: true
 enable_genders: true
@@ -101,7 +101,7 @@ enable_ethconf: false
 enable_warewulf: true
 enable_nfs_ohpc: false
 enable_nfs_home: true
-enable_reboot: false
+enable_reboot: true
 
 #
 #dhcpd settings

@@ -78,13 +78,12 @@
       failed_when: result.rc not in [0]
       when:
         - inventory_hostname in groups[nt_sms]
-
+        
 # sleep 2 && shutdown -r now
     - name: restart sms machine
       shell: sleep 2 && shutdown -r now
       async: 1
       poll: 0
-      become: true
       ignore_errors: true
       when:
         - inventory_hostname in groups[nt_sms]
@@ -279,7 +278,6 @@
       shell: sleep 2 && shutdown -r now
       async: 1
       poll: 0
-      become: true
       ignore_errors: true
       when:
         - inventory_hostname in groups[nt_cnodes]
