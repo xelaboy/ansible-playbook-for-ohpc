@@ -319,12 +319,12 @@
       replace: dest="/etc/sysconfig/network-scripts/ifcfg-{{ cnodes_ipoib_internal }}" regexp='ipoib_netmask' replace="{{ ipoib_netmask }}"
 
 #     ifup ib0
-    - name: Initiate {{ cnodes_ipoib_internal}} on master
-      command: "ifup {{ cnodes_ipoib_internal }}"
-      register: result
-      failed_when: result.rc not in [0]
-      when:
-        - inventory_hostname != "10.40.24.21"
+#    - name: Initiate {{ cnodes_ipoib_internal}} on master
+#      command: "ifup {{ cnodes_ipoib_internal }}"
+#      register: result
+#      failed_when: result.rc not in [0]
+#      when:
+  #        - inventory_hostname != "10.40.24.21"
 
     when:
       - enable_dhcpd_server == false

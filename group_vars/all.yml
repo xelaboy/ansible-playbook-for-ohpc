@@ -101,7 +101,7 @@ enable_ethconf: false
 enable_warewulf: true
 enable_nfs_ohpc: false
 enable_nfs_home: true
-enable_reboot: true
+enable_reboot: false
 
 #
 #dhcpd settings
